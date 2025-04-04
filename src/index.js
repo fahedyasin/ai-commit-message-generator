@@ -46,8 +46,8 @@ async function run() {
     // Generate AI commit message
     const aiCommitMessage = await generateCommitMessage(diff);
     // Output commit message
+    console.log("Suggest Commit Message:", aiCommitMessage)
     core.setOutput('commit-message', aiCommitMessage);
-
   } catch (error) {
     core.setFailed(error.message);
   }
