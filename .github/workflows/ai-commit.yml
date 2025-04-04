@@ -22,10 +22,14 @@ jobs:
 
       - name: Run AI Commit Message Generator
         id: commit-message
-        run: node src/index.js
+        run: |
+          output=$(node src/index.js)
+          echo "COMMIT_MESSAGE=$output" >> $GITHUB_ENV
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
       - name: Print Commit Message
-        run: echo "AI Generated Commit Message: ${{ steps.commit-message.outputs.commit-message }}"
+        run: |
+          echo "AI Generated Commit Message: ${{ env.COMMIT_MESSAGE }}"
+

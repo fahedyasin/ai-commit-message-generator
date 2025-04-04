@@ -5,9 +5,9 @@ const { generateCommitMessage } = require('./ai');
 
 async function run() {
   try {
-    const token = process.env.GITHUB_TOKEN//core.getInput('github-token');
+    const token = process.env.GH_TOKEN//core.getInput('github-token');
     if (!token) {
-      console.error("::error::GITHUB_TOKEN is not set!");
+      console.error("::error::GH_TOKEN is not set!");
       process.exit(1);
     }
     let repoDetails = process.env.GITHUB_REPOSITORY;
