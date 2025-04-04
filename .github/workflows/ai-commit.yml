@@ -38,7 +38,7 @@ jobs:
         with:
           github-token: ${{ secrets.GH_TOKEN }}
           script: |
-            const message = env.COMMIT_MESSAGE;
+            const message = process.env.COMMIT_MESSAGE;
             const commit_sha = context.payload.head_commit.id;
             github.rest.repos.createCommitComment({
               owner: context.repo.owner,

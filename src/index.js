@@ -6,7 +6,7 @@ const { generateCommitMessage } = require('./ai');
 async function run() {
   try {
     const token = process.env.GH_TOKEN//core.getInput('github-token');
-    console.log(`token: ${token}`)
+    // console.log(`token: ${token}`)
     if (!token) {
       console.error("::error::GH_TOKEN is not set!");
       process.exit(1);
@@ -17,7 +17,7 @@ async function run() {
       repoDetails = parts || '';
     }
     const [owner, repo] = repoDetails.split('/')
-    console.log(`owner: ${owner}. repo: ${repo}`)
+    // console.log(`owner: ${owner}. repo: ${repo}`)
 
     const octokit = new Octokit({ auth: token })
 
@@ -38,7 +38,7 @@ async function run() {
       repo,
       ref: commitSha
     });
-    console.log("Commit Details:", commits.data[0].commit.message)
+    // console.log("Commit Details:", commits.data[0].commit.message)
 
     const diff = commitDetails.files.map(f => `File: ${f.filename}\nChanges:\n${f.patch}`).join("\n\n");
     // console.log("diff:", diff)
@@ -46,7 +46,7 @@ async function run() {
     // Generate AI commit message
     const aiCommitMessage = await generateCommitMessage(diff);
     // Output commit message
-    console.log("Suggest Commit Message:", aiCommitMessage)
+    console.log(aiCommitMessage)
     core.setOutput('commit-message', aiCommitMessage);
   } catch (error) {
     core.setFailed(error.message);
