@@ -1,31 +1,49 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const { Octokit } = require("@octokit/rest");
 const { generateCommitMessage } = require('./ai');
 
 async function run() {
   try {
-    const token = core.getInput('github-token');
-    const octokit = github.getOctokit(token);
+    const token = process.env.GITHUB_TOKEN//core.getInput('github-token');
+    if (!token) {
+      console.error("::error::GITHUB_TOKEN is not set!");
+      process.exit(1);
+    }
+    let repoDetails = process.env.GITHUB_REPOSITORY;
+    if (repoDetails.includes('github.com')) {
+      const parts = repoDetails.split('github.com/')[1]; // Extract after github.com/
+      repoDetails = parts || '';
+    }
+    const [owner, repo] = repoDetails.split('/')
+    console.log(`owner: ${owner}. repo: ${repo}`)
 
-    // Get latest commit diff
-    const { data: commits } = await octokit.rest.repos.listCommits({
-      owner: github.context.repo.owner,
-      repo: github.context.repo.repo,
-      per_page: 1
+    const octokit = new Octokit({ auth: token })
+
+    const commits = await octokit.repos.listCommits({
+      owner,
+      repo,
+      per_page: 1,
     });
 
-    const commitSha = commits[0].sha;
-    const { data: commitDetails } = await octokit.rest.repos.getCommit({
-      owner: github.context.repo.owner,
-      repo: github.context.repo.repo,
+    if (!commits.data.length) {
+      console.error("::error1::No commits found.");
+      return;
+    }
+
+    const commitSha = commits.data[0].sha;
+    const { data: commitDetails } = await octokit.repos.getCommit({
+      owner,
+      repo,
       ref: commitSha
     });
+    console.log("Commit Details:", commits.data[0].commit.message)
 
     const diff = commitDetails.files.map(f => `File: ${f.filename}\nChanges:\n${f.patch}`).join("\n\n");
+    // console.log("diff:", diff)
 
     // Generate AI commit message
     const aiCommitMessage = await generateCommitMessage(diff);
-
     // Output commit message
     core.setOutput('commit-message', aiCommitMessage);
 

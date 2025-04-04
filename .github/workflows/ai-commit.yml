@@ -1,0 +1,31 @@
+name: AI Commit Message Generator
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  generate-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run AI Commit Message Generator
+        id: commit-message
+        run: node src/index.js
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print Commit Message
+        run: echo "AI Generated Commit Message: ${{ steps.commit-message.outputs.commit-message }}"
