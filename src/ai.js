@@ -2,7 +2,7 @@ const axios = require('axios');
 
 async function generateCommitMessage(diff) {
   const openAiApiKey = process.env.OPENAI_API_KEY;
-  console.log("openAiApiKey:", openAiApiKey)
+  // console.log("openAiApiKey:", openAiApiKey)
 
   return "sample commit message"
   // try {
