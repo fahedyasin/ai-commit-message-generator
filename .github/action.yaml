@@ -1,0 +1,15 @@
+name: "AI Commit Message Generator"
+description: "Automatically generates meaningful commit messages using AI."
+inputs:
+  github-token:
+    description: "GitHub token for accessing repo data"
+    required: true
+outputs:
+  commit-message:
+    description: "AI-generated commit message"
+runs:
+  using: "node16"
+  main: "src/index.js"
+branding:
+  icon: "message-square"
+  color: "blue"

@@ -1,0 +1,11 @@
+{
+    "name": "ai-commit-message-generator",
+    "version": "1.0.0",
+    "description": "GitHub Action to generate AI-powered commit messages",
+    "main": "src/index.js",
+    "dependencies": {
+      "@actions/core": "^1.10.0",
+      "@actions/github": "^5.1.1",
+      "axios": "^1.3.4"
+    }
+  }
